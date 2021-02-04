@@ -23,6 +23,7 @@ struct settings
 	float camera_angle_of_view;
 	float camera_z_near;
 	float camera_z_far;
+	bool smooth_shading = true;
 
 	std::string renderer_type;
 
