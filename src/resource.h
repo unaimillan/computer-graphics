@@ -84,8 +84,8 @@ struct color
 {
 	static color from_float3(const float3& in)
 	{
-		THROW_ERROR("Not implemented yet");
-		return color();
+		color color{ in.x, in.y, in.z };
+		return color;
 	};
 	float r;
 	float g;
