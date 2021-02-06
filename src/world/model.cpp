@@ -112,6 +112,12 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 					vertex.ny = attrib.normals[3 * idx.normal_index + 1];
 					vertex.nz = attrib.normals[3 * idx.normal_index + 2];
 				}
+				else
+				{
+					vertex.nx = normal.x;
+					vertex.ny = normal.y;
+					vertex.nz = normal.z;
+				}
 
 				if (materials.size() > 0)
 				{

@@ -29,9 +29,9 @@ void cg::renderer::ray_tracing_renderer::init()
 	raytracer =
 		std::make_shared<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>>();
 
-	//// Create shadow retracer
-	// shadow_raytracer =
-	//	std::make_shared<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>>();
+	// Create shadow retracer
+	 shadow_raytracer =
+		std::make_shared<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>>();
 
 	raytracer->set_render_target(render_target);
 	raytracer->set_viewport(settings->width, settings->height);
@@ -72,14 +72,14 @@ void cg::renderer::ray_tracing_renderer::render()
 		{
 			cg::renderer::ray to_light(position, light.position - position);
 
-			/*auto shadow_payload =
+			auto shadow_payload =
 				shadow_raytracer->trace_ray(to_light, 1, length(light.position - position));
 
 			if (shadow_payload.t == -1.f)
-			{*/
+			{
 				result_color += triangle.diffuse * light.color *
 							std::max(dot(normal, to_light.direction), 0.f);
-			//}
+			}
 		}
 
 		payload.color = cg::color::from_float3(result_color);
@@ -88,17 +88,17 @@ void cg::renderer::ray_tracing_renderer::render()
 	raytracer->build_acceleration_structure();
 
 
-	//// Setup shadow retracer
-	// shadow_raytracer->miss_shader = [](const ray& ray) {
-	//	payload payload{};
-	//	payload.t = -1.f;
-	//	return payload;
-	//};
+	// Setup shadow retracer
+	 shadow_raytracer->miss_shader = [](const ray& ray) {
+		payload payload{};
+		payload.t = -1.f;
+		return payload;
+	};
 
-	// shadow_raytracer->closest_hit_shader =
-	//	[](const ray& ray, payload& payload,
-	//	   const triangle<cg::vertex>& triangle) { return payload; };
-	// shadow_raytracer->acceleration_structures = raytracer->acceleration_structures;
+	 shadow_raytracer->closest_hit_shader =
+		[](const ray& ray, payload& payload,
+		   const triangle<cg::vertex>& triangle) { return payload; };
+	 shadow_raytracer->acceleration_structures = raytracer->acceleration_structures;
 
 
 	raytracer->ray_generation(
